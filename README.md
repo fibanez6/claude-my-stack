@@ -7,9 +7,8 @@
 
 ## Table of Contents
 
-1. [scripts/](scripts/) — Custom claude scripts
-    - status-line/ — Status line command scripts
-2. [openTelemetry/](openTelemetry/) — OpenTelemetry integration and devcontainer setup
-    - .devcontainer/ — VS Code Dev Container configs
-    - Devcontainer-opentelemetry-setup.md — Full stack local observability guide
-    - README.md — Telemetry usage and configuration in Claude Code
+1. [scripts/](scripts/) — Custom Claude scripts
+    - [status-line/](scripts/status-line/) — Status line command scripts
+2. [openTelemetry/](openTelemetry/) — OpenTelemetry integration and observability setup
+    - [claude-telemetry.sh](openTelemetry/claude-telemetry.sh) — Telemetry CLI script
+    - [docker/](openTelemetry/docker/) — Docker-based observability stack
