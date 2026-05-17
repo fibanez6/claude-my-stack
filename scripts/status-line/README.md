@@ -6,7 +6,7 @@ A compact, two-line [Claude Code status line](https://code.claude.com/docs/en/st
 
 With the 5-hour rate-limit bar enabled:
 
-![Status line with rate limits](docs/images/statusline_with_rate-lmitis.png)
+![Status line with rate limits](docs/images/statusline_with_rate-limits.png)
 
 ## What it shows
 
