@@ -2,14 +2,16 @@ receivers:
   otlp:
     protocols:
       grpc:
+        endpoint: 0.0.0.0:4317
       http:
+        endpoint: 0.0.0.0:4318
 
 exporters:
   prometheus:
     endpoint: "0.0.0.0:8889"
 
-  otlp/tempo:
-    endpoint: tempo:4317
+  otlphttp/loki:
+    endpoint: http://loki:3100/otlp
     tls:
       insecure: true
 
@@ -23,7 +25,7 @@ service:
       processors: [batch]
       exporters: [prometheus]
 
-    traces:
+    logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp/tempo]
+      exporters: [otlphttp/loki]

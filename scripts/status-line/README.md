@@ -2,11 +2,11 @@
 
 A compact, two-line [Claude Code status line](https://code.claude.com/docs/en/statusline) that shows model, reasoning effort, context window usage (with token count), session cost, 5-hour rate limit, and git/worktree state.
 
-![Status line](docs/images/statusline.png)
+![Status line](../../docs/images/statusline/statusline.png)
 
 With the 5-hour rate-limit bar enabled:
 
-![Status line with rate limits](docs/images/statusline_with_rate-limits.png)
+![Status line with rate limits](../../docs/images/statusline/statusline_with_rate-limits.png)
 
 ## What it shows
 

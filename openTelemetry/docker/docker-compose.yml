@@ -1,0 +1,109 @@
+services:
+  app:
+    # Node.js 22 LTS — matches the stack requirement in docs/specs/2026-05-15-design-system.md
+    image: mcr.microsoft.com/devcontainers/javascript-node:22
+    volumes:
+      - ..:/workspace:cached
+    command: sleep infinity
+    environment:
+      OTEL_SERVICE_NAME: bedrock-cost-dashboard
+
+      # Claude Code telemetry — exports metrics + events when `claude` runs
+      # inside this container. See docs/guides or code.claude.com/docs/en/monitoring-usage.
+      CLAUDE_CODE_ENABLE_TELEMETRY: "1"
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_LOGS_EXPORTER: otlp
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      # Prometheus needs cumulative counters; Claude Code defaults to delta.
+      OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE: cumulative
+      OTEL_METRIC_EXPORT_INTERVAL: "10000"
+
+      # DynamoDB Local — placeholder values only; DynamoDB Local accepts any non-empty string.
+      # Real AWS access uses aws sso login + AWS_PROFILE (never static keys).
+      DYNAMODB_ENDPOINT: http://dynamodb-local:8000
+      AWS_ACCESS_KEY_ID: local
+      AWS_SECRET_ACCESS_KEY: local
+      AWS_REGION: us-east-1
+    depends_on:
+      - otel-collector
+    healthcheck:
+      test: ["CMD", "node", "-v"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  dynamodb-local:
+    # Optional — start on demand: `docker compose up -d dynamodb-local` or via /seed
+    image: amazon/dynamodb-local:2.5.4
+    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "/data"]
+    volumes:
+      - dynamodb-data:/data
+    ports:
+      - "8000:8000"
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.107.0
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./otel/otel-collector-config.yaml:/etc/otelcol/config.yaml
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+    depends_on:
+      - prometheus
+      - loki
+    healthcheck:
+      test: ["CMD", "otelcol-contrib", "--version"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  loki:
+    image: grafana/loki:3.1.2
+    ports:
+      - "3100:3100"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:3100/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  grafana:
+    image: grafana/grafana:11.2.2
+    ports:
+      - "3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD_FILE: /run/secrets/grafana_admin_password
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+      - loki
+    secrets:
+      - grafana_admin_password
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+secrets:
+  grafana_admin_password:
+    file: ./grafana_admin_password.txt
+
+volumes:
+  dynamodb-data:

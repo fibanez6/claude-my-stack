@@ -76,40 +76,19 @@ You can centrally configure telemetry via a managed settings file:
 {
   "env": {
     "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
+    "OTEL_SERVICE_NAME": "bedrock-cost-dashboard",
     "OTEL_METRICS_EXPORTER": "otlp",
     "OTEL_LOGS_EXPORTER": "otlp",
     "OTEL_EXPORTER_OTLP_PROTOCOL": "grpc",
-    "OTEL_EXPORTER_OTLP_ENDPOINT": "http://collector.example.com:4317",
-    "OTEL_EXPORTER_OTLP_HEADERS": "Authorization=Bearer example-token"
+    "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4317",
+    "OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE": "cumulative",
+    "OTEL_METRIC_EXPORT_INTERVAL": "10000"
   }
 }
 ```
 
 See [settings precedence](https://code.claude.com/docs/en/settings#settings-precedence) for details.
 
----
-
-## 5. VS Code Devcontainer Integration
-
-To use telemetry in a VS Code devcontainer, add the environment variables to your `.devcontainer/devcontainer.json`:
-
-```json
-{
-  "name": "Claude Telemetry DevContainer",
-  "image": "ubuntu:22.04",
-  "env": {
-    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
-    "OTEL_METRICS_EXPORTER": "otlp",
-    "OTEL_LOGS_EXPORTER": "otlp",
-    "OTEL_EXPORTER_OTLP_PROTOCOL": "grpc",
-    "OTEL_EXPORTER_OTLP_ENDPOINT": "http://collector.example.com:4317",
-    "OTEL_EXPORTER_OTLP_HEADERS": "Authorization=Bearer example-token"
-  },
-  "mounts": [
-    "source=${localWorkspaceFolder}/scripts/openTelemetry/claude-telemetry.sh,target=/usr/local/bin/claude-telemetry.sh,type=bind,consistency=cached"
-  ]
-}
-```
 
 ---
 
