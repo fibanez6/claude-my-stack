@@ -18,13 +18,6 @@ services:
       # Prometheus needs cumulative counters; Claude Code defaults to delta.
       OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE: cumulative
       OTEL_METRIC_EXPORT_INTERVAL: "10000"
-
-      # DynamoDB Local — placeholder values only; DynamoDB Local accepts any non-empty string.
-      # Real AWS access uses aws sso login + AWS_PROFILE (never static keys).
-      DYNAMODB_ENDPOINT: http://dynamodb-local:8000
-      AWS_ACCESS_KEY_ID: local
-      AWS_SECRET_ACCESS_KEY: local
-      AWS_REGION: us-east-1
     depends_on:
       - otel-collector
     healthcheck:
@@ -32,15 +25,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-
-  dynamodb-local:
-    # Optional — start on demand: `docker compose up -d dynamodb-local` or via /seed
-    image: amazon/dynamodb-local:2.5.4
-    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "/data"]
-    volumes:
-      - dynamodb-data:/data
-    ports:
-      - "8000:8000"
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.107.0
@@ -104,6 +88,3 @@ services:
 secrets:
   grafana_admin_password:
     file: ./grafana_admin_password.txt
-
-volumes:
-  dynamodb-data:

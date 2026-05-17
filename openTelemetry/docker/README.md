@@ -19,12 +19,6 @@ The devcontainer bundles a full observability pipeline alongside the Next.js app
 docker compose up -d
 ```
 
-Start DynamoDB Local only when needed (or use `/seed`):
-
-```bash
-docker compose up -d dynamodb-local
-```
-
 ## Verify telemetry is flowing
 
 ### 1. Confirm Prometheus is scraping the OTel collector
