@@ -2,6 +2,8 @@
 
 This guide explains how to use the `claude-telemetry.sh` script for monitoring Claude Code usage via OpenTelemetry (OTel) on macOS and Linux, how to replace the original script, configure settings, and integrate with VS Code devcontainers.
 
+![Status line](../../docs/images/openTelemetry/openTelemetry_grafana-dashboard.png)
+
 ---
 
 ## 1. Quick Start: Enable Telemetry
