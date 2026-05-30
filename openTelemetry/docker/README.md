@@ -105,3 +105,7 @@ Ensure `CLAUDE_CODE_ENABLE_TELEMETRY=1` is set and that `claude` was run after t
 
 **Dashboard shows "No data"**
 The dashboard filters by `service_name="claude-code"`. Confirm `OTEL_SERVICE_NAME=claude-code` is set in the env before running `claude`.
+
+## References
+
+- [Claude Code Metrics (Prometheus)](https://github.com/rockdarko/claude-code-metrics-prometheus)
