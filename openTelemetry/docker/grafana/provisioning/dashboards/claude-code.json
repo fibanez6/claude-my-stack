@@ -79,7 +79,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "sum(increase(claude_code_session_count_total{exported_job=\"claude-code\"}[$__range]))",
+          "expr": "count(increase(claude_code_session_count_total{exported_job=\"bedrock-cost-dashboard\"}[$__range]))",
           "legendFormat": "Sessions",
           "refId": "A"
         }
